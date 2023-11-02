@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                      margin: EdgeInsets.fromLTRB(20, 20, 20, 60),
+                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 60),
                       child: const Text(
                         "Login",
                         style: AppTheme.titleTextStyle,
@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                                 : Icons.visibility_off,
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
                               color: AppTheme.primaryColor, width: 2.0),
                           borderRadius: BorderRadius.all(Radius.circular(10)),
