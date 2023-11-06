@@ -4,6 +4,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import '../Util/app_theme .dart';
+import '../widgets/grafico_widget.dart';
+
 class UmidadeSoloData {
   final Map<String, dynamic> data;
 
@@ -74,13 +77,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> init() async {
-    refUmidadeSolo = FirebaseDatabase.instance.reference().child('umidade_solo_5');
-    refTemperatura = FirebaseDatabase.instance.reference().child('temperatura_5');
+    refUmidadeSolo =
+        FirebaseDatabase.instance.reference().child('umidade_solo_5');
+    refTemperatura =
+        FirebaseDatabase.instance.reference().child('temperatura_5');
     refUmidadeAr = FirebaseDatabase.instance.reference().child('umidade_ar_5');
 
     refUmidadeSolo.onValue.listen((event) {
       if (event.snapshot.value != null) {
-        final Map<String, dynamic> data = (event.snapshot.value as Map<String, dynamic>);
+        final Map<String, dynamic> data =
+            (event.snapshot.value as Map<String, dynamic>);
 
         final now = DateTime.now();
 
@@ -93,11 +99,13 @@ class _HomePageState extends State<HomePage> {
           final difference = now.difference(timestamp);
 
           if (difference.inMinutes <= 60) {
-            umidadeSoloLast60Minutes.add(FlSpot(umidadeSoloLast60Minutes.length.toDouble(), umidade));
+            umidadeSoloLast60Minutes.add(
+                FlSpot(umidadeSoloLast60Minutes.length.toDouble(), umidade));
           }
 
           if (difference.inHours <= 24) {
-            umidadeSoloLast24Hours.add(FlSpot(umidadeSoloLast24Hours.length.toDouble(), umidade));
+            umidadeSoloLast24Hours
+                .add(FlSpot(umidadeSoloLast24Hours.length.toDouble(), umidade));
           }
         });
 
@@ -109,7 +117,8 @@ class _HomePageState extends State<HomePage> {
 
     refTemperatura.onValue.listen((event) {
       if (event.snapshot.value != null) {
-        final Map<String, dynamic> data = (event.snapshot.value as Map<String, dynamic>);
+        final Map<String, dynamic> data =
+            (event.snapshot.value as Map<String, dynamic>);
 
         final now = DateTime.now();
 
@@ -122,11 +131,13 @@ class _HomePageState extends State<HomePage> {
           final difference = now.difference(timestamp);
 
           if (difference.inMinutes <= 60) {
-            temperaturaLast60Minutes.add(FlSpot(temperaturaLast60Minutes.length.toDouble(), temperatura));
+            temperaturaLast60Minutes.add(FlSpot(
+                temperaturaLast60Minutes.length.toDouble(), temperatura));
           }
 
           if (difference.inHours <= 24) {
-            temperaturaLast24Hours.add(FlSpot(temperaturaLast24Hours.length.toDouble(), temperatura));
+            temperaturaLast24Hours.add(
+                FlSpot(temperaturaLast24Hours.length.toDouble(), temperatura));
           }
         });
 
@@ -138,7 +149,8 @@ class _HomePageState extends State<HomePage> {
 
     refUmidadeAr.onValue.listen((event) {
       if (event.snapshot.value != null) {
-        final Map<String, dynamic> data = (event.snapshot.value as Map<String, dynamic>);
+        final Map<String, dynamic> data =
+            (event.snapshot.value as Map<String, dynamic>);
 
         final now = DateTime.now();
 
@@ -151,11 +163,13 @@ class _HomePageState extends State<HomePage> {
           final difference = now.difference(timestamp);
 
           if (difference.inMinutes <= 60) {
-            umidadeArLast60Minutes.add(FlSpot(umidadeArLast60Minutes.length.toDouble(), umidadeAr));
+            umidadeArLast60Minutes.add(
+                FlSpot(umidadeArLast60Minutes.length.toDouble(), umidadeAr));
           }
 
           if (difference.inHours <= 24) {
-            umidadeArLast24Hours.add(FlSpot(umidadeArLast24Hours.length.toDouble(), umidadeAr));
+            umidadeArLast24Hours
+                .add(FlSpot(umidadeArLast24Hours.length.toDouble(), umidadeAr));
           }
         });
 
@@ -166,273 +180,70 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gráficos de Umidade'),
+        centerTitle: true,
+        title: const Text(
+          'Dashboards',
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: const Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: Icon(
+                Icons.logout_outlined,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
+        leading: Text(""),
+        backgroundColor: AppTheme.primaryColor,
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Umidade do solo - Gráfico da última hora de medições
-            Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          height: 250,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(0, 2),
-                blurRadius: 6,
-              ),
-            ],
-          ),
-          child: LineChart(
-            LineChartData(
-              gridData: FlGridData(show: false),
-              borderData: FlBorderData(
-                show: true,
-                border: Border.all(
-                  color: const Color(0xff37434d),
-                  width: 1,
-                ),
-              ),
-              minX: 0,
+            GraficoWidget(
               maxX: umidadeSoloLast60Minutes.length.toDouble() - 1,
-              minY: 0,
-              maxY: 100, // Ajuste o valor máximo conforme necessário
-              lineBarsData: [
-                LineChartBarData(
-                  spots: umidadeSoloLast60Minutes,
-                  isCurved: true,
-                  color: Colors.green,
-                  barWidth: 3,
-                  belowBarData: BarAreaData(show: true),
-                ),
-              ],
+              spots: umidadeSoloLast60Minutes,
+              corCurva: Colors.blue,
+              titulo: "Umidade do solo - Gráfico da última hora de medições",
             ),
-          ),
-        ),
-      ),
-            // Umidade do solo - Gráfico das últimas 24 horas de medições
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 2),
-                      blurRadius: 6,
-                    ),
-                  ],
-                ),
-                child: LineChart(
-                  LineChartData(
-                    gridData: FlGridData(show: false),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(
-                        color: const Color(0xff37434d),
-                        width: 1,
-                      ),
-                    ),
-                    minX: 0,
-                    maxX: umidadeSoloLast24Hours.length.toDouble() - 1,
-                    minY: 0,
-                    maxY: 100, // Ajuste o valor máximo conforme necessário
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: umidadeSoloLast24Hours,
-                        isCurved: true,
-                        color: Colors.green,
-                        barWidth: 3,
-                        belowBarData: BarAreaData(show: true),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            GraficoWidget(
+              maxX: umidadeSoloLast24Hours.length.toDouble() - 1,
+              spots: umidadeSoloLast24Hours,
+              corCurva: Colors.green,
+              titulo:
+                  "Umidade do solo - Gráfico das últimas 24 horas de medições",
             ),
-            // Temperatura - Gráfico da última hora de medições
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 2),
-                      blurRadius: 6,
-                    ),
-                  ],
-                ),
-                child: LineChart(
-                  LineChartData(
-                    gridData: FlGridData(show: false),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(
-                        color: const Color(0xff37434d),
-                        width: 1,
-                      ),
-                    ),
-                    minX: 0,
-                    maxX: temperaturaLast60Minutes.length.toDouble() - 1,
-                    minY: 0,
-                    maxY: 100, // Ajuste o valor máximo conforme necessário
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: temperaturaLast60Minutes,
-                        isCurved: true,
-                        color: Colors.red,
-                        barWidth: 3,
-                        belowBarData: BarAreaData(show: true),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            GraficoWidget(
+              maxX: temperaturaLast60Minutes.length.toDouble() - 1,
+              spots: temperaturaLast60Minutes,
+              corCurva: Colors.yellow,
+              titulo: "Temperatura - Gráfico da última hora de medições",
             ),
-            // Temperatura - Gráfico das últimas 24 horas de medições
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 2),
-                      blurRadius: 6,
-                    ),
-                  ],
-                ),
-                child: LineChart(
-                  LineChartData(
-                    gridData: FlGridData(show: false),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(
-                        color: const Color(0xff37434d),
-                        width: 1,
-                      ),
-                    ),
-                    minX: 0,
-                    maxX: temperaturaLast24Hours.length.toDouble() - 1,
-                    minY: 0,
-                    maxY: 100, // Ajuste o valor máximo conforme necessário
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: temperaturaLast24Hours,
-                        isCurved: true,
-                        color: Colors.red,
-                        barWidth: 3,
-                        belowBarData: BarAreaData(show: true),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            GraficoWidget(
+              maxX: temperaturaLast24Hours.length.toDouble() - 1,
+              spots: temperaturaLast24Hours,
+              corCurva: Colors.amberAccent,
+              titulo: "Temperatura - Gráfico das últimas 24 horas de medições",
             ),
-            // Temperatura - Gráfico da última hora de medições
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 2),
-                      blurRadius: 6,
-                    ),
-                  ],
-                ),
-                child: LineChart(
-                  LineChartData(
-                    gridData: FlGridData(show: false),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(
-                        color: const Color(0xff37434d),
-                        width: 1,
-                      ),
-                    ),
-                    minX: 0,
-                    maxX: umidadeArLast60Minutes.length.toDouble() - 1,
-                    minY: 0,
-                    maxY: 100, // Ajuste o valor máximo conforme necessário
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: umidadeArLast60Minutes,
-                        isCurved: true,
-                        color: Colors.blue,
-                        barWidth: 3,
-                        belowBarData: BarAreaData(show: true),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            GraficoWidget(
+              maxX: umidadeArLast60Minutes.length.toDouble() - 1,
+              spots: umidadeArLast60Minutes,
+              corCurva: Colors.teal,
+              titulo: "Temperatura - Gráfico da última hora de medições",
             ),
-            // Temperatura - Gráfico das últimas 24 horas de medições
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0, 2),
-                      blurRadius: 6,
-                    ),
-                  ],
-                ),
-                child: LineChart(
-                  LineChartData(
-                    gridData: FlGridData(show: false),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(
-                        color: const Color(0xff37434d),
-                        width: 1,
-                      ),
-                    ),
-                    minX: 0,
-                    maxX: umidadeArLast24Hours.length.toDouble() - 1,
-                    minY: 0,
-                    maxY: 100, // Ajuste o valor máximo conforme necessário
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: umidadeArLast24Hours,
-                        isCurved: true,
-                        color: Colors.blue,
-                        barWidth: 3,
-                        belowBarData: BarAreaData(show: true),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            GraficoWidget(
+              maxX: umidadeArLast24Hours.length.toDouble() - 1,
+              spots: umidadeArLast24Hours,
+              corCurva: Colors.cyan,
+              titulo: "Temperatura - Gráfico das últimas 24 horas de medições",
             ),
           ],
         ),
