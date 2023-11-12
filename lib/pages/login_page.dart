@@ -52,12 +52,17 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                      margin: const EdgeInsets.fromLTRB(20, 20, 20, 60),
-                      child: const Text(
-                        "Login",
-                        style: AppTheme.titleTextStyle,
-                      )),
+                  Column(
+                    children: [
+                      Container(
+                          margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                          child: const Text(
+                            "Login ByteBank",
+                            style: AppTheme.titleTextStyle,
+                          )),
+                      Container(width: 100, height: 100, child: Image.asset('assets/bytelogo.png'))
+                    ],
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: TextFormField(

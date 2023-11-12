@@ -179,6 +179,9 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+  bool mostrarPadding1 = false;
+  bool mostrarPadding2 = false;
+  bool mostrarPadding3 = false;
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +189,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          'Dashboards',
+          'ByteBank',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         actions: [
@@ -204,49 +207,197 @@ class _HomePageState extends State<HomePage> {
         leading: Text(""),
         backgroundColor: AppTheme.primaryColor,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GraficoWidget(
-              maxX: umidadeSoloLast60Minutes.length.toDouble() - 1,
-              spots: umidadeSoloLast60Minutes,
-              corCurva: Colors.blue,
-              titulo: "Umidade do solo - Gráfico da última hora de medições",
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(70.0),
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/bytelogo.png'),
+                  fit: BoxFit.fitHeight,
+                  opacity: 0.2
+                ),
+              ),
             ),
-            GraficoWidget(
-              maxX: umidadeSoloLast24Hours.length.toDouble() - 1,
-              spots: umidadeSoloLast24Hours,
-              corCurva: Colors.green,
-              titulo:
-                  "Umidade do solo - Gráfico das últimas 24 horas de medições",
+          ),
+          Container(
+            color: Colors.black.withOpacity(0.09), // Opacidade de 50%
+          ),
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Seja bem vindo, Mateus!", style: TextStyle(fontSize: 34),),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Card(
+                    elevation: 10.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                mostrarPadding1 = !mostrarPadding1;
+                              });
+                            },
+                            child: Text("Umidade do Solo"),
+                          ),
+                          Visibility(
+                            visible: mostrarPadding1,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: GraficoWidget(
+                                        maxX: umidadeSoloLast60Minutes.length.toDouble() - 1,
+                                        spots: umidadeSoloLast60Minutes,
+                                        corCurva: Colors.blue,
+                                        titulo: "Última hora de medições",
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: GraficoWidget(
+                                        maxX: umidadeSoloLast24Hours.length.toDouble() - 1,
+                                        spots: umidadeSoloLast24Hours,
+                                        corCurva: Colors.green,
+                                        titulo: "Últimas 24 horas de medições",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Card(
+                    elevation: 10.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                mostrarPadding2 = !mostrarPadding2;
+                              });
+                            },
+                            child: Text("Temperatura"),
+                          ),
+                          Visibility(
+                            visible: mostrarPadding2,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: GraficoWidget(
+                                        maxX: temperaturaLast60Minutes.length.toDouble() - 1,
+                                        spots: temperaturaLast60Minutes,
+                                        corCurva: Colors.blue,
+                                        titulo: "Última hora de medições",
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: GraficoWidget(
+                                        maxX: temperaturaLast24Hours.length.toDouble() - 1,
+                                        spots: temperaturaLast24Hours,
+                                        corCurva: Colors.green,
+                                        titulo: "Últimas 24 horas de medições",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Card(
+                    elevation: 10.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                mostrarPadding3 = !mostrarPadding3;
+                              });
+                            },
+                            child: Text("Umidade do Ar"),
+                          ),
+                          Visibility(
+                            visible: mostrarPadding3,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: GraficoWidget(
+                                        maxX: umidadeArLast60Minutes.length.toDouble() - 1,
+                                        spots: umidadeArLast60Minutes,
+                                        corCurva: Colors.blue,
+                                        titulo: "Última hora de medições",
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: GraficoWidget(
+                                        maxX: umidadeArLast24Hours.length.toDouble() - 1,
+                                        spots: umidadeArLast24Hours,
+                                        corCurva: Colors.green,
+                                        titulo: "Últimas 24 horas de medições",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            GraficoWidget(
-              maxX: temperaturaLast60Minutes.length.toDouble() - 1,
-              spots: temperaturaLast60Minutes,
-              corCurva: Colors.yellow,
-              titulo: "Temperatura - Gráfico da última hora de medições",
-            ),
-            GraficoWidget(
-              maxX: temperaturaLast24Hours.length.toDouble() - 1,
-              spots: temperaturaLast24Hours,
-              corCurva: Colors.amberAccent,
-              titulo: "Temperatura - Gráfico das últimas 24 horas de medições",
-            ),
-            GraficoWidget(
-              maxX: umidadeArLast60Minutes.length.toDouble() - 1,
-              spots: umidadeArLast60Minutes,
-              corCurva: Colors.teal,
-              titulo: "Temperatura - Gráfico da última hora de medições",
-            ),
-            GraficoWidget(
-              maxX: umidadeArLast24Hours.length.toDouble() - 1,
-              spots: umidadeArLast24Hours,
-              corCurva: Colors.cyan,
-              titulo: "Temperatura - Gráfico das últimas 24 horas de medições",
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

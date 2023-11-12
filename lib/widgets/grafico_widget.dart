@@ -8,10 +8,10 @@ class GraficoWidget extends StatelessWidget {
   String titulo;
   GraficoWidget(
       {Key? key,
-      required this.maxX,
-      required this.spots,
-      required this.corCurva,
-      required this.titulo})
+        required this.maxX,
+        required this.spots,
+        required this.corCurva,
+        required this.titulo})
       : super(key: key);
 
   @override
@@ -38,7 +38,6 @@ class GraficoWidget extends StatelessWidget {
               gridData: const FlGridData(
                 show: false,
                 verticalInterval: 10,
-                //horizontalInterval: 10,
               ),
               borderData: FlBorderData(
                 show: false,
@@ -50,18 +49,23 @@ class GraficoWidget extends StatelessWidget {
               minX: 0,
               maxX: maxX,
               minY: 0,
-              maxY: 75,
+              maxY: 100,
               lineBarsData: [
                 LineChartBarData(
                   spots: spots,
                   isCurved: true,
                   color: corCurva,
                   barWidth: 3,
-                  belowBarData:
-                      BarAreaData(show: true, color: corCurva.withOpacity(0.2)),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    color: corCurva.withOpacity(0.2),
+                  ),
+                  dotData: FlDotData(
+                    show: false,
+                  ),
                 ),
               ],
-              titlesData:  FlTitlesData(
+              titlesData: FlTitlesData(
                 leftTitles: const AxisTitles(
                   axisNameWidget: Text("Resultado"),
                   axisNameSize: 24,
@@ -72,52 +76,20 @@ class GraficoWidget extends StatelessWidget {
                 ),
                 rightTitles: const AxisTitles(
                   sideTitles: SideTitles(
-                    showTitles: false,
+                    showTitles: false, // Defina como false para não mostrar os títulos
                     reservedSize: 0,
                   ),
                 ),
-                topTitles:  AxisTitles(
-                    sideTitles: const SideTitles(
-                      showTitles: false,
-                      reservedSize: 0,
-                    ),
-                    axisNameWidget: Text(titulo, style: TextStyle(fontSize: 15),)),
+                topTitles: AxisTitles(
+                  sideTitles: const SideTitles(
+                    showTitles: false,
+                    reservedSize: 0,
+                  ),
+                  axisNameWidget: Text(titulo, style: TextStyle(fontSize: 15)),
+                ),
               ),
               lineTouchData: LineTouchData(
-                enabled: true,
-                getTouchedSpotIndicator:
-                    (LineChartBarData barData, List<int> spotIndexes) {
-                  return spotIndexes.map((index) {
-                    return TouchedSpotIndicatorData(
-                      FlLine(
-                        color: Color.fromARGB(255, 14, 10, 10).withOpacity(0.2),
-                      ),
-                      FlDotData(
-                        show: true,
-                        getDotPainter: (spot, percent, barData, index) =>
-                            FlDotCirclePainter(
-                          radius: 8,
-                          color: Colors.red,
-                          strokeWidth: 2,
-                          strokeColor: Colors.white,
-                        ),
-                      ),
-                    );
-                  }).toList();
-                },
-                touchTooltipData: LineTouchTooltipData(
-                  tooltipBgColor: Colors.red,
-                  tooltipRoundedRadius: 8,
-                  getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
-                    return lineBarsSpot.map((lineBarSpot) {
-                      return LineTooltipItem(
-                        lineBarSpot.y.toString(),
-                        const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      );
-                    }).toList();
-                  },
-                ),
+                // Resto das configurações...
               ),
             ),
           ),
