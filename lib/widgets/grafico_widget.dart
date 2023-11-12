@@ -1,17 +1,23 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class GraficoWidget extends StatelessWidget {
   double maxX;
   List<FlSpot> spots;
+  List<DateTime>? datas;
+  bool mostrarIntervalo;
+
   Color corCurva;
   String titulo;
   GraficoWidget(
       {Key? key,
-        required this.maxX,
-        required this.spots,
-        required this.corCurva,
-        required this.titulo})
+      required this.maxX,
+      required this.spots,
+      required this.corCurva,
+      required this.titulo,
+      this.datas,
+      required this.mostrarIntervalo})
       : super(key: key);
 
   @override
@@ -60,14 +66,14 @@ class GraficoWidget extends StatelessWidget {
                     show: true,
                     color: corCurva.withOpacity(0.2),
                   ),
-                  dotData: FlDotData(
+                  dotData: const FlDotData(
                     show: false,
                   ),
                 ),
               ],
               titlesData: FlTitlesData(
                 leftTitles: const AxisTitles(
-                  axisNameWidget: Text("Resultado"),
+                  axisNameWidget: Text("Resultados"),
                   axisNameSize: 24,
                   sideTitles: SideTitles(
                     showTitles: true,
@@ -76,7 +82,7 @@ class GraficoWidget extends StatelessWidget {
                 ),
                 rightTitles: const AxisTitles(
                   sideTitles: SideTitles(
-                    showTitles: false, // Defina como false para não mostrar os títulos
+                    showTitles: false,
                     reservedSize: 0,
                   ),
                 ),
@@ -87,14 +93,67 @@ class GraficoWidget extends StatelessWidget {
                   ),
                   axisNameWidget: Text(titulo, style: TextStyle(fontSize: 15)),
                 ),
+                bottomTitles: AxisTitles(
+                  axisNameWidget: const Text("Datas"),
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    interval: 1,
+                    getTitlesWidget: (value, meta) {
+                      return bottomTitleWidgets(
+                        value,
+                        meta,
+                      );
+                    },
+                    reservedSize: 30,
+                  ),
+                ),
               ),
-              lineTouchData: LineTouchData(
-                // Resto das configurações...
-              ),
+              lineTouchData: LineTouchData(),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      //color: AppColors.contentColorPink,
+      fontFamily: 'Digital',
+      fontSize: 10,
+    );
+    String text = '';
+    try {
+      for (var item in datas!) {
+        if (!mostrarIntervalo) {
+          text = formatData(datas![value.toInt()]);
+        } else {
+          if (value.toInt() % 10 == 0) {
+            text = formatData(datas![value.toInt()]);
+          }
+        }
+      }
+    } catch (error) {
+      return SideTitleWidget(
+        axisSide: meta.axisSide,
+        child: const Text('', style: style),
+      );
+    }
+
+    return Transform.rotate(
+      angle: 6,
+      child: SideTitleWidget(
+        axisSide: meta.axisSide,
+        child: Text(text, style: style),
+      ),
+    );
+  }
+
+  String formatData(DateTime? data) {
+    if (data == null) {
+      return "";
+    }
+    return DateFormat('dd/MM/yyyy  HH:mm').format(data).toString();
   }
 }

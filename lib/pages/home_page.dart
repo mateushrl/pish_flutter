@@ -70,6 +70,13 @@ class _HomePageState extends State<HomePage> {
   List<FlSpot> umidadeArLast60Minutes = [];
   List<FlSpot> umidadeArLast24Hours = [];
 
+  List<DateTime> datasUmidadeSoloLast60Minutes = [];
+  List<DateTime> datasUmidadeSoloLast24Hours = [];
+  List<DateTime> datasTemperaturaLast60Minutes = [];
+  List<DateTime> datasTemperaturaLast24Hours = [];
+  List<DateTime> datasUmidadeArLast60Minutes = [];
+  List<DateTime> datasUmidadeArLast24Hours = [];
+
   @override
   void initState() {
     super.initState();
@@ -101,11 +108,14 @@ class _HomePageState extends State<HomePage> {
           if (difference.inMinutes <= 60) {
             umidadeSoloLast60Minutes.add(
                 FlSpot(umidadeSoloLast60Minutes.length.toDouble(), umidade));
+            datasUmidadeSoloLast60Minutes.add(timestamp);
           }
 
           if (difference.inHours <= 24) {
             umidadeSoloLast24Hours
                 .add(FlSpot(umidadeSoloLast24Hours.length.toDouble(), umidade));
+
+            datasUmidadeSoloLast24Hours.add(timestamp);
           }
         });
 
@@ -133,11 +143,14 @@ class _HomePageState extends State<HomePage> {
           if (difference.inMinutes <= 60) {
             temperaturaLast60Minutes.add(FlSpot(
                 temperaturaLast60Minutes.length.toDouble(), temperatura));
+            datasTemperaturaLast60Minutes.add(timestamp);
           }
 
           if (difference.inHours <= 24) {
             temperaturaLast24Hours.add(
                 FlSpot(temperaturaLast24Hours.length.toDouble(), temperatura));
+
+            datasTemperaturaLast24Hours.add(timestamp);
           }
         });
 
@@ -165,11 +178,14 @@ class _HomePageState extends State<HomePage> {
           if (difference.inMinutes <= 60) {
             umidadeArLast60Minutes.add(
                 FlSpot(umidadeArLast60Minutes.length.toDouble(), umidadeAr));
+            datasUmidadeArLast60Minutes.add(timestamp);
           }
 
           if (difference.inHours <= 24) {
             umidadeArLast24Hours
                 .add(FlSpot(umidadeArLast24Hours.length.toDouble(), umidadeAr));
+
+            datasUmidadeArLast24Hours.add(timestamp);
           }
         });
 
@@ -179,6 +195,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+
   bool mostrarPadding1 = false;
   bool mostrarPadding2 = false;
   bool mostrarPadding3 = false;
@@ -213,12 +230,11 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.all(70.0),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/bytelogo.png'),
-                  fit: BoxFit.fitHeight,
-                  opacity: 0.2
-                ),
+                    image: AssetImage('assets/bytelogo.png'),
+                    fit: BoxFit.fitHeight,
+                    opacity: 0.2),
               ),
             ),
           ),
@@ -229,12 +245,15 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Seja bem vindo, Mateus!", style: TextStyle(fontSize: 34),),
+                      Text(
+                        "Seja bem vindo, Mateus!",
+                        style: TextStyle(fontSize: 34),
+                      ),
                     ],
                   ),
                 ),
@@ -265,18 +284,26 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Expanded(
                                       child: GraficoWidget(
-                                        maxX: umidadeSoloLast60Minutes.length.toDouble() - 1,
+                                        maxX: umidadeSoloLast60Minutes.length
+                                                .toDouble() -
+                                            1,
                                         spots: umidadeSoloLast60Minutes,
                                         corCurva: Colors.blue,
                                         titulo: "Última hora de medições",
+                                        datas: datasUmidadeSoloLast60Minutes,
+                                        mostrarIntervalo: false,
                                       ),
                                     ),
                                     Expanded(
                                       child: GraficoWidget(
-                                        maxX: umidadeSoloLast24Hours.length.toDouble() - 1,
+                                        maxX: umidadeSoloLast24Hours.length
+                                                .toDouble() -
+                                            1,
                                         spots: umidadeSoloLast24Hours,
                                         corCurva: Colors.green,
                                         titulo: "Últimas 24 horas de medições",
+                                        datas: datasUmidadeSoloLast24Hours,
+                                        mostrarIntervalo: true,
                                       ),
                                     ),
                                   ],
@@ -284,7 +311,6 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -317,18 +343,26 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Expanded(
                                       child: GraficoWidget(
-                                        maxX: temperaturaLast60Minutes.length.toDouble() - 1,
+                                        maxX: temperaturaLast60Minutes.length
+                                                .toDouble() -
+                                            1,
                                         spots: temperaturaLast60Minutes,
                                         corCurva: Colors.blue,
                                         titulo: "Última hora de medições",
+                                        datas: datasTemperaturaLast60Minutes,
+                                        mostrarIntervalo: false,
                                       ),
                                     ),
                                     Expanded(
                                       child: GraficoWidget(
-                                        maxX: temperaturaLast24Hours.length.toDouble() - 1,
+                                        maxX: temperaturaLast24Hours.length
+                                                .toDouble() -
+                                            1,
                                         spots: temperaturaLast24Hours,
                                         corCurva: Colors.green,
                                         titulo: "Últimas 24 horas de medições",
+                                        datas: datasTemperaturaLast24Hours,
+                                        mostrarIntervalo: true,
                                       ),
                                     ),
                                   ],
@@ -336,7 +370,6 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -369,18 +402,26 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Expanded(
                                       child: GraficoWidget(
-                                        maxX: umidadeArLast60Minutes.length.toDouble() - 1,
+                                        maxX: umidadeArLast60Minutes.length
+                                                .toDouble() -
+                                            1,
                                         spots: umidadeArLast60Minutes,
                                         corCurva: Colors.blue,
                                         titulo: "Última hora de medições",
+                                        datas: datasUmidadeArLast60Minutes,
+                                        mostrarIntervalo: false,
                                       ),
                                     ),
                                     Expanded(
                                       child: GraficoWidget(
-                                        maxX: umidadeArLast24Hours.length.toDouble() - 1,
+                                        maxX: umidadeArLast24Hours.length
+                                                .toDouble() -
+                                            1,
                                         spots: umidadeArLast24Hours,
                                         corCurva: Colors.green,
                                         titulo: "Últimas 24 horas de medições",
+                                        datas: datasUmidadeArLast24Hours,
+                                        mostrarIntervalo: true,
                                       ),
                                     ),
                                   ],
@@ -388,7 +429,6 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-
                         ],
                       ),
                     ),
